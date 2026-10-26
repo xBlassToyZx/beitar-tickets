@@ -1,0 +1,55 @@
+.map {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.section {
+  cursor: pointer;
+}
+
+.section[data-disabled] {
+  cursor: not-allowed;
+}
+
+.section rect,
+.section polygon {
+  stroke: var(--surface);
+  stroke-width: 2;
+  transition: fill 0.2s;
+}
+
+.section:not([data-disabled]):hover rect,
+.section:not([data-disabled]):hover polygon,
+.section:focus-visible rect,
+.section:focus-visible polygon {
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.section:focus-visible {
+  outline: none;
+}
+
+.section text {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.section .sub {
+  font-size: 9px;
+}
+
+.miniShape rect,
+.miniShape polygon {
+  stroke: var(--surface);
+  stroke-width: 3;
+}
+
+.outer text {
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 800;
+}

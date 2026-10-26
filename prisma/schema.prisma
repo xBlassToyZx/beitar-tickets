@@ -1,0 +1,152 @@
+// Data model for Teddy Stadium ticketing.
+// Stadium layout (stands, sections, seats) is static reference data seeded from src/domain/stadium.
+// Sales data (holds, orders, tickets, season tickets) is written by the app.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Stand {
+  id       String    @id // N, E, S, W, A
+  name     String
+  sections Section[]
+}
+
+model PriceCategory {
+  id          String    @id // e.g. W1, WS, BX
+  name        String
+  shortName   String
+  priceAgorot Int
+  sections    Section[]
+}
+
+model Section {
+  id         String        @id // e.g. "1", "5L", "BX3"
+  label      String // text shown on the stadium map
+  name       String // full display name, e.g. "גוש 5 תחתון"
+  standId    String
+  stand      Stand         @relation(fields: [standId], references: [id])
+  categoryId String
+  category   PriceCategory @relation(fields: [categoryId], references: [id])
+  capacity   Int
+  gate       String
+  onSale     Boolean       @default(true)
+  seats      Seat[]
+
+  @@index([standId])
+  @@index([categoryId])
+}
+
+model Seat {
+  id            Int            @id @default(autoincrement())
+  sectionId     String
+  section       Section        @relation(fields: [sectionId], references: [id])
+  row           Int
+  number        Int
+  holds         SeatHold[]
+  tickets       Ticket[]
+  seasonTickets SeasonTicket[]
+
+  @@unique([sectionId, row, number])
+  @@index([sectionId])
+}
+
+model Match {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  opponent    String
+  competition String
+  kickoff     DateTime
+  holds       SeatHold[]
+  orders      Order[]
+  tickets     Ticket[]
+
+  @@index([kickoff])
+}
+
+// A short reservation taken when a buyer picks a seat. Expired holds are ignored and cleaned up.
+model SeatHold {
+  id        String   @id @default(cuid())
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  seatId    Int
+  seat      Seat     @relation(fields: [seatId], references: [id])
+  sectionId String // denormalized for fast availability counts
+  buyerId   String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([matchId, seatId])
+  @@index([buyerId, matchId])
+  @@index([matchId, sectionId])
+}
+
+model Order {
+  id            String         @id @default(cuid())
+  buyerId       String
+  kind          String // "MATCH" | "SEASON"
+  matchId       String?
+  match         Match?         @relation(fields: [matchId], references: [id])
+  totalAgorot   Int
+  createdAt     DateTime       @default(now())
+  tickets       Ticket[]
+  seasonTickets SeasonTicket[]
+
+  @@index([buyerId])
+}
+
+model Ticket {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+  matchId     String
+  match       Match    @relation(fields: [matchId], references: [id])
+  seatId      Int
+  seat        Seat     @relation(fields: [seatId], references: [id])
+  sectionId   String // denormalized for fast availability counts
+  buyerId     String
+  priceAgorot Int
+  createdAt   DateTime @default(now())
+
+  // A seat can be sold only once per match. The database enforces it.
+  @@unique([matchId, seatId])
+  @@index([buyerId])
+  @@index([matchId, sectionId])
+}
+
+model SeasonPlan {
+  id            String         @id // ENDS, EAST, WEST
+  name          String
+  priceAgorot   Int
+  categoryIds   String // comma-separated PriceCategory ids
+  features      String // JSON array of strings
+  featured      Boolean        @default(false)
+  sortOrder     Int            @default(0)
+  seasonTickets SeasonTicket[]
+}
+
+model SeasonTicket {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  season    String
+  planId    String
+  plan      SeasonPlan @relation(fields: [planId], references: [id])
+  orderId   String
+  order     Order      @relation(fields: [orderId], references: [id])
+  seatId    Int
+  seat      Seat       @relation(fields: [seatId], references: [id])
+  sectionId String
+  buyerId   String
+  createdAt DateTime   @default(now())
+
+  @@unique([season, seatId])
+  @@unique([season, buyerId])
+  @@index([season, sectionId])
+}

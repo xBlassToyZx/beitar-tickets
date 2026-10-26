@@ -1,0 +1,275 @@
+/* Design tokens: Apple-style system UI, light and dark. */
+:root {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #f5f5f7;
+  --line: rgba(0, 0, 0, 0.09);
+  --fg: #1d1d1f;
+  --muted: #6e6e73;
+  --accent: #0071e3;
+  --accent-press: #0062c4;
+  --on-accent: #ffffff;
+  --gold: #f5c518;
+  --gold-ink: #a86f00;
+  --on-gold: #1d1d1f;
+  --ok: #248a3d;
+  --bad: #d70015;
+  --away: #f2d6d3;
+  --sec: #e8e8ed;
+  --sec-low: #c7c7cc;
+  --seat-free: color-mix(in srgb, var(--accent) 34%, var(--surface));
+  --bar: rgba(255, 255, 255, 0.72);
+  --seg: rgba(118, 118, 128, 0.12);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 24px rgba(0, 0, 0, 0.06);
+  --card-border: transparent;
+  --pitch: #2f6b3a;
+  --font:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Hebrew", "Assistant", system-ui,
+    "Segoe UI", Arial, sans-serif;
+  --display:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Hebrew", "Assistant", system-ui,
+    sans-serif;
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --surface: #1c1c1e;
+    --surface-2: #2c2c2e;
+    --line: rgba(255, 255, 255, 0.12);
+    --fg: #f5f5f7;
+    --muted: #98989d;
+    --accent: #2997ff;
+    --accent-press: #4aa8ff;
+    --gold-ink: #ffd60a;
+    --ok: #30d158;
+    --bad: #ff453a;
+    --away: #4a2a28;
+    --sec: #3a3a3c;
+    --sec-low: #232325;
+    --bar: rgba(28, 28, 30, 0.72);
+    --seg: rgba(118, 118, 128, 0.24);
+    --shadow: none;
+    --card-border: var(--line);
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.47;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  text-wrap: balance;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+h3 {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px));
+}
+
+.page {
+  padding-block: 40px 64px;
+}
+
+.eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold-ink);
+  margin-bottom: 6px;
+}
+
+.lead {
+  color: var(--muted);
+  margin: 10px 0 0;
+  max-width: 60ch;
+  font-size: 19px;
+  line-height: 1.42;
+}
+
+.note {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--card-border);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 980px;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 500;
+  background: var(--accent);
+  color: var(--on-accent);
+  transition:
+    transform 0.1s ease-out,
+    background 0.2s;
+}
+
+.btn:hover {
+  background: var(--accent-press);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-ghost {
+  background: var(--seg);
+  color: var(--accent);
+}
+
+.btn-ghost:hover {
+  background: color-mix(in srgb, var(--seg) 70%, var(--accent) 12%);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 99px;
+  background: var(--seg);
+  color: var(--muted);
+}
+
+.pill-hot {
+  background: color-mix(in srgb, var(--bad) 14%, transparent);
+  color: var(--bad);
+}
+
+.pill-ok {
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  color: var(--ok);
+}
+
+.alert {
+  font-size: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.alert-error {
+  background: color-mix(in srgb, var(--bad) 10%, transparent);
+}
+
+.alert-ok {
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-block: 28px 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+.demo-banner {
+  background: var(--surface-2);
+  color: var(--muted);
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  padding: 7px 16px;
+}

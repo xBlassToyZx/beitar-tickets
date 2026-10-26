@@ -1,0 +1,68 @@
+.card {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 22px;
+}
+
+.date {
+  text-align: center;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  padding: 8px 0;
+}
+
+.date b {
+  display: block;
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.date small {
+  color: var(--bad);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.body {
+  min-width: 0;
+}
+
+.comp {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.teams {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+@media (max-width: 560px) {
+  .card {
+    grid-template-columns: 60px minmax(0, 1fr);
+    padding: 16px;
+  }
+  .action {
+    grid-column: 1 / -1;
+  }
+  .action :global(.btn) {
+    width: 100%;
+  }
+}
